@@ -1,6 +1,4 @@
 import {Renderer} from "./renderer/Renderer";
-import {BoardRenderer} from "./renderer/graphics/BoardRenderer";
-import {RenderObject} from "./renderer/graphics/RenderObject";
 import {LoggerRenderer} from "./renderer/LoggerRenderer";
 
 import {GameRunner} from "./runner/GameRunner";
@@ -16,7 +14,6 @@ import {Yare} from "./Yare";
 
 export {
   Renderer,
-  BoardRenderer, RenderObject,
   LoggerRenderer,
 
   GameRunner,
