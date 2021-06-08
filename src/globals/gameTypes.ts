@@ -33,6 +33,7 @@ export interface Spirit extends Common {
   energize: (target: Intractable) => void;
   merge: (target: Spirit) => void;
   divide: () => void;
+  jump: (position: Position) => void;
   shout: (message: string) => void;
   set_mark: (label: string) => void;
 }

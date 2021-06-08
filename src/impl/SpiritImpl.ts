@@ -5,6 +5,7 @@ import {getBlankSight} from "../utils/misc";
 import {Log, Logger} from "../utils/Logger";
 import {Intractable, Position, Spirit} from "../globals/gameTypes";
 import {SpiritData} from "./Data";
+import {SpiritJumpEvent} from "../events/SpiritJumpEvent";
 
 @Log
 export class SpiritImpl implements Spirit {
@@ -45,6 +46,12 @@ export class SpiritImpl implements Spirit {
   }
 
   public divide(): void {
+  }
+
+  public jump(position: Position): void {
+    if (this.energy >= Math.ceil(this.energy_capacity / 2)) {
+      this.owner.game.gameEventLoop.addEvent(new SpiritJumpEvent(this, position));
+    }
   }
 
   public shout(message: string): void {

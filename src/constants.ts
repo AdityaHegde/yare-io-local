@@ -1,4 +1,5 @@
 export const MOVE_DISTANCE = 20;
+export const JUMP_DISTANCE = 300;
 
 export const ACTION_DISTANCE = 197;
 export const ACTION_DISTANCE_SQUARED = ACTION_DISTANCE * ACTION_DISTANCE;
