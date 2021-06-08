@@ -3,8 +3,6 @@ import {readFile} from "fs/promises";
 import {createContext, runInContext} from "vm";
 
 export class VmRunner extends AIRunner {
-  private scriptContent: string;
-
   public async init(): Promise<void> {
     this.scriptContent = (await readFile(this.scriptPath)).toString();
   }

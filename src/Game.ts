@@ -3,6 +3,7 @@ import {EnergyImpl} from "./impl/EnergyImpl";
 import {SpiritImpl} from "./impl/SpiritImpl";
 import {GameEventLoop} from "./events/GameEventLoop";
 import {Grid} from "./Grid";
+import {SpiritType} from "./SpiritType";
 
 export class Game {
   public players: Array<Player>;
@@ -17,12 +18,12 @@ export class Game {
 
   public grid: Grid;
 
-  constructor() {
+  constructor(playerSpiritTypes: Array<SpiritType>) {
     this.gameEventLoop = new GameEventLoop(this);
     this.grid = new Grid(this);
     this.players = [
-      new Player("one", this),
-      new Player("two", this),
+      new Player("one", this, playerSpiritTypes[0]),
+      new Player("two", this, playerSpiritTypes[1]),
     ];
   }
 

@@ -1,10 +1,11 @@
-import {Game} from "../src/Game";
-import {GameRunner} from "../src/runner/GameRunner";
+import {Game} from "../src";
+import {GameRunner} from "../src";
 import {VmRunner} from "../src/runner/VmRunner";
-import {Yare} from "../src/Yare";
-import {LoggerRenderer} from "../src/renderer/LoggerRenderer";
+import {Yare} from "../src";
+import {LoggerRenderer} from "../src";
+import {SpiritType} from "../src/SpiritType";
 
-const game = new Game();
+const game = new Game([SpiritType.Circle, SpiritType.Circle]);
 const yare = new Yare(
   game,
   new GameRunner(game, [

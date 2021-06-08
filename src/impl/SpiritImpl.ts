@@ -4,6 +4,7 @@ import {SpiritEnergizeEvent} from "../events/SpiritEnergizeEvent";
 import {getBlankSight} from "../utils/misc";
 import {Log, Logger} from "../utils/Logger";
 import {Intractable, Position, Spirit} from "../globals/gameTypes";
+import {SpiritData} from "./Data";
 
 @Log
 export class SpiritImpl implements Spirit {
@@ -15,19 +16,19 @@ export class SpiritImpl implements Spirit {
   public position: Position;
   public sight = getBlankSight();
   public mark: string;
+  public mergedCount = 0;
 
   public owner: Player;
 
   private logger: Logger;
 
   constructor(
-    id: string, energy_capacity: number,
-    size: number, position: Position,
+    id: string, position: Position,
     owner: Player,
   ) {
     this.id = id;
-    this.energy = this.energy_capacity = energy_capacity;
-    this.size = size;
+    this.energy = this.energy_capacity = SpiritData[owner.spiritType].energyCapacity;
+    this.size = SpiritData[owner.spiritType].size;
     this.position = position;
     this.owner = owner;
   }

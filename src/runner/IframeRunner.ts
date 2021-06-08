@@ -6,6 +6,10 @@ export class IframeRunner extends AIRunner {
   public async init(): Promise<void> {
     this.iframe = document.createElement("iframe");
     this.iframe.src = "about:blank";
+    this.iframe.style.display = "none";
+    document.body.appendChild(this.iframe);
+
+    // this.scriptContent = await (await fetch(this.scriptPath)).text() + "\nwindow.done();";
   }
 
   public async run(playerGlobal: Record<string, any>): Promise<void> {
@@ -14,12 +18,17 @@ export class IframeRunner extends AIRunner {
     });
 
     return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
+      const script = this.iframe.contentDocument.createElement("script");
+      script.type = "application/javascript";
       script.src = this.scriptPath;
       script.onload = () => {
-        setTimeout(resolve, 100);
+        setTimeout(() => {
+          this.iframe.contentDocument.body.removeChild(script);
+          resolve();
+        });
       };
       script.onerror = reject;
+      this.iframe.contentDocument.body.appendChild(script);
     });
   }
 }

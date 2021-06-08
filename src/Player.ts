@@ -2,6 +2,7 @@ import {BaseImpl} from "./impl/BaseImpl";
 import {Game} from "./Game";
 import {SpiritImpl} from "./impl/SpiritImpl";
 import EventEmitter from "events";
+import {SpiritType} from "./SpiritType";
 
 export class Player extends EventEmitter {
   public name: string;
@@ -10,17 +11,20 @@ export class Player extends EventEmitter {
   public memory: Record<any, any> = {};
   public game: Game;
 
+  public spiritType: SpiritType;
+
   public static SPIRIT_DESTROYED = "spirit-destroyed";
   public static SPIRIT_CREATED = "spirit-created";
 
-  constructor(name: string, game: Game) {
+  constructor(name: string, game: Game, spiritType: SpiritType) {
     super();
     this.name = name;
     this.game = game;
+    this.spiritType = spiritType;
   }
 
   public bootstrapData(index: number) {
-    this.base = new BaseImpl(`base_${this.name}`, 200,
+    this.base = new BaseImpl(`base_${this.name}`,
       [1600 + 1200 * index, 700 + 1000 * index], this);
 
     for (let i = 0; i < 7; i++) {
@@ -40,6 +44,7 @@ export class Player extends EventEmitter {
     if (idx >= 0) {
       this.spirits.splice(idx, 1);
     }
+    this.base.removeSpirit(spirit);
     this.emit(Player.SPIRIT_DESTROYED, spirit);
   }
 }

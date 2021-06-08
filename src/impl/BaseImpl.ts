@@ -2,12 +2,13 @@ import {Player} from "../Player";
 import {SpiritImpl} from "./SpiritImpl";
 import {getBlankSight} from "../utils/misc";
 import {Base, Position} from "../globals/gameTypes";
+import {BaseData} from "./Data";
 
 const SPIRIT_COST = 50;
 
 export class BaseImpl implements Base {
   public id: string;
-  public hp = 100;
+  public hp = 1;
   public energy = 0;
   public energy_capacity: number;
   public size = 40;
@@ -18,24 +19,44 @@ export class BaseImpl implements Base {
   public underAttack = false;
 
   public owner: Player;
+  private readonly spiritCost: Array<[number, number, number]>;
+  private spiritCostIdx: number;
 
   private spiritIdx = -1;
+  private spiritCount = 0;
 
   constructor(
-    id: string, energy_capacity: number, position: Position,
+    id: string, position: Position,
     owner: Player,
   ) {
     this.id = id;
-    this.energy_capacity = energy_capacity;
     this.position = position;
     this.owner = owner;
+
+    this.energy_capacity = BaseData[owner.spiritType].energyCapacity;
+    this.spiritCost = BaseData[owner.spiritType].cost as Array<[number, number, number]>;
+    this.spiritCostIdx = 0;
   }
 
   public createSpirit(position: Position) {
     this.spiritIdx++;
+    this.spiritCount++;
+
+    if (this.spiritCount > this.spiritCost[this.spiritCostIdx][1]) {
+      this.spiritCostIdx++;
+    }
+
     return new SpiritImpl(
-      `${this.owner.name}${this.spiritIdx}`, 10, 1, position, this.owner,
+      `${this.owner.name}${this.spiritIdx}`, position, this.owner,
     );
+  }
+
+  public removeSpirit(spirit: SpiritImpl) {
+    this.spiritCount -= 1 + spirit.mergedCount;
+
+    if (this.spiritCount < this.spiritCost[this.spiritCostIdx][0]) {
+      this.spiritCostIdx--;
+    }
   }
 
   public createSpiritIfEnoughEnergy() {
@@ -43,12 +64,12 @@ export class BaseImpl implements Base {
       return;
     }
 
-    while (this.energy >= SPIRIT_COST) {
+    while (this.energy >= this.spiritCost[this.spiritCostIdx][2]) {
+      this.energy -= this.spiritCost[this.spiritCostIdx][2];
       this.owner.addNewSpirit(this.createSpirit([
         this.position[0] + 5,
         this.position[1] + 5,
       ]));
-      this.energy -= SPIRIT_COST;
     }
   }
 
