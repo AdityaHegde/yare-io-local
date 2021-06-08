@@ -17,7 +17,7 @@ export function SideBar({yare, game}: {yare: Yare, game: Game}) {
   }
 
   return (<div style={{position: "absolute", right: "0px", width: "500px"}}>
-  <button onClick={pause}>{paused ? "Resume" : "Pause"}</button>
+    <button onClick={pause}>{paused ? "Resume" : "Pause"}</button>
     <GameInfo game={game} />
   </div>);
 }
