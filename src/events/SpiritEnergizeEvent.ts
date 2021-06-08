@@ -5,13 +5,11 @@ import {isWithinRange} from "../utils/GridUtils";
 import {Energy, EnergyEntity, Intractable} from "../globals/gameTypes";
 
 export class SpiritEnergizeEvent extends GameEvent {
-  public type = GameEventType.SPIRIT_ENERGIZE;
-
   public source: SpiritImpl;
   public target: Intractable;
 
   constructor(source: SpiritImpl, target: Intractable) {
-    super();
+    super(`${GameEventType.SPIRIT_ENERGIZE}--${source.id}`);
     this.source = source;
     this.target = target;
   }

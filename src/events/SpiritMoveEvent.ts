@@ -5,13 +5,11 @@ import {moveToPoint} from "../utils/GridUtils";
 import {Position} from "../globals/gameTypes";
 
 export class SpiritMoveEvent extends GameEvent {
-  public type = GameEventType.SPIRIT_MOVE;
-
   public source: SpiritImpl;
   public targetPosition: Position;
 
   constructor(source: SpiritImpl, targetPosition: Position) {
-    super();
+    super(`${GameEventType.SPIRIT_MOVE}--${source.id}`);
     this.source = source;
     this.targetPosition = targetPosition;
   }

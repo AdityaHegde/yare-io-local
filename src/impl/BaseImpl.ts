@@ -1,6 +1,6 @@
 import {Player} from "../Player";
 import {SpiritImpl} from "./SpiritImpl";
-import {getBlankSight} from "../utils";
+import {getBlankSight} from "../utils/misc";
 import {Base, Position} from "../globals/gameTypes";
 
 const SPIRIT_COST = 50;

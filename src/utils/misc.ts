@@ -1,4 +1,4 @@
-import {Sight} from "./globals/gameTypes";
+import {Sight} from "../globals/gameTypes";
 
 export function getBlankSight(): Sight {
   return {

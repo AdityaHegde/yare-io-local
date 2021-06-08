@@ -1,7 +1,7 @@
 import {Player} from "../Player";
 import {SpiritMoveEvent} from "../events/SpiritMoveEvent";
 import {SpiritEnergizeEvent} from "../events/SpiritEnergizeEvent";
-import {getBlankSight} from "../utils";
+import {getBlankSight} from "../utils/misc";
 import {Log, Logger} from "../utils/Logger";
 import {Intractable, Position, Spirit} from "../globals/gameTypes";
 

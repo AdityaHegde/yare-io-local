@@ -4,7 +4,11 @@ export enum GameEventType {
 }
 
 export class GameEvent {
-  public type: GameEventType;
+  public id: string;
+
+  constructor(id: string) {
+    this.id = id;
+  }
 
   public run() {}
 }
