@@ -28,9 +28,9 @@ export class Player extends EventEmitter {
       [1600 + 1200 * index, 700 + 1000 * index], this);
 
     for (let i = 0; i < 7; i++) {
-      this.addNewSpirit(this.base.createSpirit(
+      this.base.createSpirit(
         [1500 + i * 50 + 1200 * index, 500 + 1000 * index],
-      ));
+      );
     }
   }
 

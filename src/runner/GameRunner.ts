@@ -74,9 +74,16 @@ export class GameRunner extends EventEmitter {
     const player = this.game.players[index];
     // this.logger.log(`PostTick player=${player.name} code`);
 
-    player.spirits
-      .filter(spirit => spirit.hp === 0)
-      .forEach(spirit => this.game.spiritDestroyed(spirit));
+    player.spirits.forEach((spirit) => {
+      if (spirit.hp > 0) {
+        return;
+      }
+
+      if (spirit.deadFor === 0) {
+        this.game.spiritDestroyed(spirit)
+      }
+      spirit.deadFor--;
+    });
 
     if (player.base.hp === 0) {
       this.logger.log(`Base destroyed player=${player.name}`);
@@ -84,5 +91,6 @@ export class GameRunner extends EventEmitter {
     }
 
     player.base.createSpiritIfEnoughEnergy();
+    player.base.addBackSplitSpirits();
   }
 }

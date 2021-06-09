@@ -8,5 +8,9 @@ export const SIGHT_DISTANCE = 397;
 export const SIGHT_DISTANCE_SQUARED = SIGHT_DISTANCE * SIGHT_DISTANCE;
 export const ORIGINAL_SIGHT_DISTANCE_SQUARED = 400 * 400;
 
+export const MERGE_DISTANCE_SQUARED = 20 * 20;
+
+export const MAX_MERGE_COUNT = 100;
+
 export const MAX_X = 4400;
 export const MAX_Y = 2700;

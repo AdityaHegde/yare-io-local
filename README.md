@@ -3,9 +3,10 @@
 Library to simulate yare.io locally. Has support for running in a vm instance or in an iframe on browser.
 Supports just logging out the status or a simple renderer.
 
-1. Supports Circle and Squares
-2. No merging in Circle yet.
-2. Square.jump() is supported.
+Features,
+1. Supports Circle and Squares.
+2. All APIs mentioned in the doc https://yare.io/documentation.
+3. Comparing 2 AIs programmatically.
 
 ## Installation guide
 
@@ -22,8 +23,9 @@ npm i pixi.js --save-dev
 ### Testing in nodejs
 
 Library supports running code within a vm.
+
 ```typescript
-import {Game, GameRunner, LoggerRenderer, SpiritType, Yare} from "@adityahegde/yare-io-local";
+import {Game, GameRunner, BlankRenderer, SpiritType, Yare} from "@adityahegde/yare-io-local";
 import {VmRunner} from "@adityahegde/yare-io-local/dist/runner/VmRunner";
 
 const game = new Game([
@@ -40,13 +42,27 @@ const yare = new Yare(
     // takes path to script. Player two's runner.
     new VmRunner(process.argv[3]),
   ]),
-  // LoggerRenderer that logs status. Extend Renderer and implement your own.
-  new LoggerRenderer(game),
-  { runIntervalInMs: 5 },
+  // BlankRenderer that leaves all methods blank.
+  // Extend Renderer and implement your own.
+  new BlankRenderer(game),
+  {runIntervalInMs: 5},
 );
 yare.init().then(() => yare.resume());
 ```
 
+If your AI can run independently in the same scope, replace VmRunner with LocalAIRunner,
+```typescript
+new GameRunner(game, [
+  new LocalAIRunner(() => {
+    // run player one's AI here.
+  }),
+  new LocalAIRunner(() => {
+    // run player two's AI here.
+  }),
+]);
+```
+This is helpful when building the AI programmatically with different parameters.
+Both player's AIs share the global scope so make sure it only depends on globals defined in the docs.
 
 ### Testing in a browser
 

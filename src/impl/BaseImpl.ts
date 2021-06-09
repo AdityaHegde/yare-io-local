@@ -3,9 +3,9 @@ import {SpiritImpl} from "./SpiritImpl";
 import {getBlankSight} from "../utils/misc";
 import {Base, Position} from "../globals/gameTypes";
 import {BaseData} from "./Data";
+import {Log, Logger} from "../utils/Logger";
 
-const SPIRIT_COST = 50;
-
+@Log
 export class BaseImpl implements Base {
   public id: string;
   public hp = 1;
@@ -17,13 +17,17 @@ export class BaseImpl implements Base {
   public structure_type = "base";
 
   public underAttack = false;
+  public splitSpirits = new Array<[position: Position, spiritIds: Array<string>, energy: number]>();
 
   public owner: Player;
-  private readonly spiritCost: Array<[number, number, number]>;
+  private readonly spiritCost: Array<[low: number, high: number, cost: number]>;
   private spiritCostIdx: number;
+  private readonly maxSpirits: number;
 
   private spiritIdx = -1;
   private spiritCount = 0;
+
+  private logger: Logger;
 
   constructor(
     id: string, position: Position,
@@ -36,6 +40,7 @@ export class BaseImpl implements Base {
     this.energy_capacity = BaseData[owner.spiritType].energyCapacity;
     this.spiritCost = BaseData[owner.spiritType].cost as Array<[number, number, number]>;
     this.spiritCostIdx = 0;
+    this.maxSpirits = BaseData[owner.spiritType].maxSpirits;
   }
 
   public createSpirit(position: Position) {
@@ -44,11 +49,16 @@ export class BaseImpl implements Base {
 
     if (this.spiritCount > this.spiritCost[this.spiritCostIdx][1]) {
       this.spiritCostIdx++;
+      this.logger.log(`Player=${this.owner.name} SpiritCost=${this.spiritCost[this.spiritCostIdx][2]}`);
     }
 
-    return new SpiritImpl(
+    if (this.spiritCount === this.maxSpirits) {
+      this.logger.log(`Player=${this.owner.name} Reached max spirits: ${this.maxSpirits}`);
+    }
+
+    this.owner.addNewSpirit(new SpiritImpl(
       `${this.owner.name}${this.spiritIdx}`, position, this.owner,
-    );
+    ));
   }
 
   public removeSpirit(spirit: SpiritImpl) {
@@ -56,20 +66,7 @@ export class BaseImpl implements Base {
 
     if (this.spiritCount < this.spiritCost[this.spiritCostIdx][0]) {
       this.spiritCostIdx--;
-    }
-  }
-
-  public createSpiritIfEnoughEnergy() {
-    if (this.underAttack) {
-      return;
-    }
-
-    while (this.energy >= this.spiritCost[this.spiritCostIdx][2]) {
-      this.energy -= this.spiritCost[this.spiritCostIdx][2];
-      this.owner.addNewSpirit(this.createSpirit([
-        this.position[0] + 5,
-        this.position[1] + 5,
-      ]));
+      this.logger.log(`Player=${this.owner.name} SpiritCost=${this.spiritCost[this.spiritCostIdx][2]}`);
     }
   }
 
@@ -83,5 +80,42 @@ export class BaseImpl implements Base {
     } else {
       this.sight.enemies.push(spiritImpl.id);
     }
+  }
+
+  public spiritHasSplit(spiritImpl: SpiritImpl) {
+    this.splitSpirits.push([
+      spiritImpl.position,
+      [...spiritImpl.mergedSpiritIds],
+      Math.floor(spiritImpl.energy / spiritImpl.mergedCount),
+    ]);
+  }
+
+  public createSpiritIfEnoughEnergy() {
+    if (this.underAttack) {
+      return;
+    }
+
+    while (this.spiritCount < this.maxSpirits &&
+           this.energy >= this.spiritCost[this.spiritCostIdx][2]) {
+      this.energy -= this.spiritCost[this.spiritCostIdx][2];
+      this.createSpirit([
+        this.position[0] + 5,
+        this.position[1] + 5,
+      ]);
+    }
+  }
+
+  public addBackSplitSpirits() {
+    this.splitSpirits.forEach(([position, spiritIds, energy]) => {
+      spiritIds.forEach((spiritId) => {
+        this.owner.addNewSpirit(new SpiritImpl(
+          `${this.owner.name}${spiritId}`, position, this.owner, energy,
+        ));
+      });
+    });
+  }
+
+  public hasReachedMaxSpirits() {
+    return this.spiritCount === this.maxSpirits;
   }
 }
