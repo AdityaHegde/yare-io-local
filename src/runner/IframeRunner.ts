@@ -28,6 +28,7 @@ export class IframeRunner extends AIRunner {
         });
       };
       script.onerror = reject;
+      this.iframe.contentWindow.onerror = reject;
       this.iframe.contentDocument.body.appendChild(script);
     });
   }

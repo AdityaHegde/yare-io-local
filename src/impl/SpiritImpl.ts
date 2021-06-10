@@ -9,6 +9,8 @@ import {SpiritJumpEvent} from "../events/SpiritJumpEvent";
 import {SpiritType} from "../SpiritType";
 import {isWithinRange} from "../utils/GridUtils";
 import {MERGE_DISTANCE_SQUARED} from "../constants";
+import {SpiritMergeEvent} from "../events/SpiritMergeEvent";
+import {SpiritDivideEvent} from "../events/SpiritDivideEvent";
 
 @Log
 export class SpiritImpl implements Spirit {
@@ -50,15 +52,15 @@ export class SpiritImpl implements Spirit {
     this.owner.game.gameEventLoop.addEvent(new SpiritEnergizeEvent(this, target));
   }
 
-  public merge(target: Spirit): void {
+  public merge(target: SpiritImpl): void {
     if (this.owner.spiritType === SpiritType.Circle && isWithinRange(this, target, MERGE_DISTANCE_SQUARED)) {
-
+      this.owner.game.gameEventLoop.addEvent(new SpiritMergeEvent(this, target));
     }
   }
 
   public divide(): void {
     if (this.owner.spiritType === SpiritType.Circle && this.mergedCount > 0) {
-
+      this.owner.game.gameEventLoop.addEvent(new SpiritDivideEvent(this));
     }
   }
 

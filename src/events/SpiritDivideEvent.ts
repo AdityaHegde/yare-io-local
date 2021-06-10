@@ -3,7 +3,7 @@ import {SpiritImpl} from "../impl/SpiritImpl";
 import {moveToPoint} from "../utils/GridUtils";
 import {MAX_MERGE_COUNT, MOVE_DISTANCE} from "../constants";
 
-export class SpiritMergeEvent extends GameEvent {
+export class SpiritDivideEvent extends GameEvent {
   private readonly source: SpiritImpl;
 
   constructor(source: SpiritImpl) {

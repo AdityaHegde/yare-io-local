@@ -3,9 +3,7 @@ import {SpiritImpl} from "./SpiritImpl";
 import {getBlankSight} from "../utils/misc";
 import {Base, Position} from "../globals/gameTypes";
 import {BaseData} from "./Data";
-import {Log, Logger} from "../utils/Logger";
 
-@Log
 export class BaseImpl implements Base {
   public id: string;
   public hp = 1;
@@ -27,8 +25,6 @@ export class BaseImpl implements Base {
   private spiritIdx = -1;
   private spiritCount = 0;
 
-  private logger: Logger;
-
   constructor(
     id: string, position: Position,
     owner: Player,
@@ -49,11 +45,6 @@ export class BaseImpl implements Base {
 
     if (this.spiritCount > this.spiritCost[this.spiritCostIdx][1]) {
       this.spiritCostIdx++;
-      this.logger.log(`Player=${this.owner.name} SpiritCost=${this.spiritCost[this.spiritCostIdx][2]}`);
-    }
-
-    if (this.spiritCount === this.maxSpirits) {
-      this.logger.log(`Player=${this.owner.name} Reached max spirits: ${this.maxSpirits}`);
     }
 
     this.owner.addNewSpirit(new SpiritImpl(
@@ -66,7 +57,6 @@ export class BaseImpl implements Base {
 
     if (this.spiritCount < this.spiritCost[this.spiritCostIdx][0]) {
       this.spiritCostIdx--;
-      this.logger.log(`Player=${this.owner.name} SpiritCost=${this.spiritCost[this.spiritCostIdx][2]}`);
     }
   }
 

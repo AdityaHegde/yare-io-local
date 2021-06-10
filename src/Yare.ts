@@ -2,27 +2,30 @@ import {GameRunner} from "./runner/GameRunner";
 import {Game} from "./Game";
 import {Renderer} from "./renderer/Renderer";
 
+export type YareConfig = {
+  runIntervalInMs: number;
+  pauseOnError?: boolean;
+}
+
 export class Yare {
   private readonly gameRunner: GameRunner;
   private readonly renderer: Renderer;
 
-  private runIntervalInMs: number;
+  private readonly runIntervalInMs: number;
+  private readonly pauseOnError: boolean;
 
   private runIntervalId: any;
   private ended = false;
 
   constructor(
     game: Game, gameRunner: GameRunner, renderer: Renderer,
-    {
-      runIntervalInMs,
-    }: {
-      runIntervalInMs: number;
-    },
+    {runIntervalInMs, pauseOnError}: YareConfig,
   ) {
     this.gameRunner = gameRunner;
     this.renderer = renderer;
 
     this.runIntervalInMs = runIntervalInMs;
+    this.pauseOnError = pauseOnError || false;
   }
 
   public async init() {
@@ -35,6 +38,11 @@ export class Yare {
       this.ended = true;
       this.pause();
     });
+    if (this.pauseOnError) {
+      this.gameRunner.on(GameRunner.ERROR_THROWN, () => {
+        this.pause();
+      });
+    }
   }
 
   public resume() {

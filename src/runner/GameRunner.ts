@@ -11,9 +11,10 @@ export class GameRunner extends EventEmitter {
   public game: Game;
   public aiRunner: Array<AIRunner>;
 
-  public static SPIRIT_DESTROYED = "spirit-destroyed";
-  public static SPIRIT_CREATED = "spirit-created";
-  public static BASE_DESTROYED = "base-destroyed";
+  public static readonly SPIRIT_DESTROYED = "spirit-destroyed";
+  public static readonly SPIRIT_CREATED = "spirit-created";
+  public static readonly BASE_DESTROYED = "base-destroyed";
+  public static readonly ERROR_THROWN = "error-thrown";
 
   constructor(game: Game, aiRunner: Array<AIRunner>) {
     super();
@@ -66,7 +67,7 @@ export class GameRunner extends EventEmitter {
     try {
       await this.aiRunner[index].run(playerGlobal);
     } catch (err) {
-      this.logger.error(err);
+      this.emit(GameRunner.ERROR_THROWN);
     }
   }
 
