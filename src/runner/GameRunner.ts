@@ -55,7 +55,6 @@ export class GameRunner extends EventEmitter {
   }
 
   private async tickForPlayer(index: number): Promise<void> {
-    // this.logger.log(`Tick player=${this.game.players[index].name} code`);
     const playerGlobal = this.game.getGlobalsForPlayer(index);
 
     for (const k in playerGlobal) {
@@ -67,13 +66,12 @@ export class GameRunner extends EventEmitter {
     try {
       await this.aiRunner[index].run(playerGlobal);
     } catch (err) {
-      this.emit(GameRunner.ERROR_THROWN);
+      this.emit(GameRunner.ERROR_THROWN, index, err.stack);
     }
   }
 
   private postTickForPlayer(index: number) {
     const player = this.game.players[index];
-    // this.logger.log(`PostTick player=${player.name} code`);
 
     player.spirits.forEach((spirit) => {
       if (spirit.hp > 0) {
@@ -87,7 +85,6 @@ export class GameRunner extends EventEmitter {
     });
 
     if (player.base.hp === 0) {
-      this.logger.log(`Base destroyed player=${player.name}`);
       this.emit(GameRunner.BASE_DESTROYED, player);
     }
 

@@ -17,6 +17,9 @@ export class Yare {
   private runIntervalId: any;
   private ended = false;
 
+  public errorFrom = -1;
+  public errorStack: string;
+
   constructor(
     game: Game, gameRunner: GameRunner, renderer: Renderer,
     {runIntervalInMs, pauseOnError}: YareConfig,
@@ -39,7 +42,9 @@ export class Yare {
       this.pause();
     });
     if (this.pauseOnError) {
-      this.gameRunner.on(GameRunner.ERROR_THROWN, () => {
+      this.gameRunner.on(GameRunner.ERROR_THROWN, (errorFrom, errorStack) => {
+        this.errorFrom = errorFrom;
+        this.errorStack = errorStack;
         this.pause();
       });
     }
