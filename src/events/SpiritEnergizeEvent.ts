@@ -9,7 +9,7 @@ export class SpiritEnergizeEvent extends GameEvent {
   public target: Intractable;
 
   constructor(source: SpiritImpl, target: Intractable) {
-    super(`${GameEventType.SPIRIT_ENERGIZE}--${source.id}`);
+    super(GameEventType.SPIRIT_ENERGIZE, source.id);
     this.source = source;
     this.target = target;
   }

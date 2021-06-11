@@ -5,7 +5,7 @@ export class SpiritDivideEvent extends GameEvent {
   private readonly source: SpiritImpl;
 
   constructor(source: SpiritImpl) {
-    super(`${GameEventType.SPIRIT_DIVIDE}--${source.id}`);
+    super(GameEventType.SPIRIT_DIVIDE, source.id);
     this.source = source;
   }
 

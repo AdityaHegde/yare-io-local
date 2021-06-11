@@ -7,7 +7,7 @@ export class SpiritMergeEvent extends GameEvent {
   private readonly target: SpiritImpl;
 
   constructor(source: SpiritImpl, target: SpiritImpl) {
-    super(`${GameEventType.SPIRIT_MERGE}--${source.id}`);
+    super(GameEventType.SPIRIT_MERGE, source.id);
     this.source = source;
     this.target = target;
   }

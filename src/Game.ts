@@ -29,7 +29,7 @@ export class Game {
 
   public init() {
     this.star_zxq = new EnergyImpl("star_zxq", [1000, 1000]);
-    this.star_a1c = new EnergyImpl("star_a1c", [3400, 1400]);
+    this.star_a1c = new EnergyImpl("star_a1c", [3200, 1400]);
 
     this.players.forEach((player, index) => {
       player.bootstrapData(index);

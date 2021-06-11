@@ -9,7 +9,7 @@ export class SpiritMoveEvent extends GameEvent {
   public targetPosition: Position;
 
   constructor(source: SpiritImpl, targetPosition: Position) {
-    super(`${GameEventType.SPIRIT_MOVE}--${source.id}`);
+    super(GameEventType.SPIRIT_MOVE, source.id);
     this.source = source;
     this.targetPosition = targetPosition;
   }
