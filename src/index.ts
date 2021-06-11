@@ -7,7 +7,7 @@ import {AIRunner} from "./runner/AIRunner";
 import {LocalAIRunner} from "./runner/LocalAIRunner";
 
 import {Logger, Log} from "./utils/Logger";
-import {moveToPoint, isWithinRange, getDistance, getDistanceBetweenPos, atPosition} from "./utils/GridUtils";
+import {moveToPoint, isWithinRange, getDistance, getDistanceBetweenPos} from "./utils/GridUtils";
 
 import {Game} from "./Game";
 import {SpiritType} from "./SpiritType";
@@ -23,7 +23,7 @@ export {
   LocalAIRunner,
 
   Logger, Log,
-  moveToPoint, isWithinRange, getDistance, getDistanceBetweenPos, atPosition,
+  moveToPoint, isWithinRange, getDistance, getDistanceBetweenPos,
 
   Game,
   SpiritType,

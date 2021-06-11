@@ -28,7 +28,3 @@ export function moveToPoint(sourcePos: Position, targetPos: Position, distance: 
     sourcePos[1] + Math.round(Math.sin(angle) * distance),
   ];
 }
-
-export function atPosition(entity: Intractable, pos: Position) {
-  return entity.position[0] === pos[0] && entity.position[1] === pos[1];
-}

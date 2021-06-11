@@ -1,7 +1,5 @@
 import {GameEvent, GameEventType} from "./GameEvent";
 import {SpiritImpl} from "../impl/SpiritImpl";
-import {moveToPoint} from "../utils/GridUtils";
-import {MAX_MERGE_COUNT, MOVE_DISTANCE} from "../constants";
 
 export class SpiritDivideEvent extends GameEvent {
   private readonly source: SpiritImpl;
