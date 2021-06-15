@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {GameInfo} from "./GameInfo";
 import {Yare} from "../Yare";
-import {Game} from "../Game";
+import {Game} from "../game/Game";
 
 export function SideBar({yare, game}: {yare: Yare, game: Game}) {
   const [paused, setPaused] = useState<boolean>(false);

@@ -1,4 +1,4 @@
-import {SpiritType} from "../SpiritType";
+import {SpiritType} from "../game/SpiritType";
 
 const MAX_COUNT = 999999;
 

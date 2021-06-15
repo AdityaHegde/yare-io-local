@@ -1,14 +1,13 @@
 import {Player} from "./Player";
-import {EnergyImpl} from "./impl/EnergyImpl";
-import {SpiritImpl} from "./impl/SpiritImpl";
-import {GameEventLoop} from "./events/GameEventLoop";
+import {EnergyImpl} from "../impl/EnergyImpl";
+import {SpiritImpl} from "../impl/SpiritImpl";
+import {GameEventLoop} from "../events/GameEventLoop";
 import {Grid} from "./Grid";
 import {SpiritType} from "./SpiritType";
 
 export class Game {
-  public players: Array<Player>;
-  public star_zxq: EnergyImpl;
-  public star_a1c: EnergyImpl;
+  public players = new Array<Player>();
+  public stars = new Array<EnergyImpl>();
 
   public spirits: {
     [k in string]: SpiritImpl
@@ -21,42 +20,38 @@ export class Game {
   constructor(playerSpiritTypes: Array<SpiritType>) {
     this.gameEventLoop = new GameEventLoop(this);
     this.grid = new Grid(this);
-    this.players = [
-      new Player("one", this, playerSpiritTypes[0]),
-      new Player("two", this, playerSpiritTypes[1]),
-    ];
+    playerSpiritTypes.forEach((playerSpiritType, idx) =>
+      this.players.push(new Player(`Player${idx}`, this, playerSpiritType)));
   }
 
   public init() {
-    this.star_zxq = new EnergyImpl("star_zxq", [1000, 1000]);
-    this.star_a1c = new EnergyImpl("star_a1c", [3200, 1400]);
-
     this.players.forEach((player, index) => {
-      player.bootstrapData(index);
-      player.spirits.forEach((spirit) => {
-        this.spirits[spirit.id] = spirit;
-      });
-      player.on(Player.SPIRIT_CREATED, spirit => this.spirits[spirit.id] = spirit);
+      player.spirits.forEach(spirit => this.spiritAdded(spirit));
+      player.on(Player.SPIRIT_CREATED, spirit => this.spiritAdded(spirit));
     });
+  }
+
+  public spiritAdded(spirit: SpiritImpl) {
+    this.spirits[spirit.id] = spirit;
   }
 
   public spiritDestroyed(spirit: SpiritImpl) {
     delete this.spirits[spirit.id];
-
-    ((spirit as any).owner as Player).spiritDestroyed(spirit);
+    spirit.owner.spiritDestroyed(spirit);
   }
 
   public getGlobalsForPlayer(index: number): Record<string, any> {
+    const enemyIndex = (index + (index % 2 === 0 ? 1 : -1)) % this.players.length;
     const player = this.players[index];
-    const enemyPlayer = this.players[(index + 1) % this.players.length];
+    const enemyPlayer = this.players[enemyIndex];
     const globalAlias: Record<string, any> = {};
 
     globalAlias.spirits = this.spirits;
     globalAlias.my_spirits = player.spirits;
     globalAlias.base = player.base;
     globalAlias.enemy_base = enemyPlayer.base;
-    globalAlias.star_zxq = this.star_zxq;
-    globalAlias.star_a1c = this.star_a1c;
+    globalAlias.star_zxq = this.stars[index];
+    globalAlias.star_a1c = this.stars[enemyIndex];
     globalAlias.memory = player.memory;
 
     return globalAlias;

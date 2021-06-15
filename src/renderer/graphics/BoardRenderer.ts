@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import {Game} from "../../Game";
+import {Game} from "../../game/Game";
 import {RenderObject} from "./RenderObject";
 import {SpiritImpl} from "../../impl/SpiritImpl";
 import {Log} from "../../utils/Logger";
@@ -28,10 +28,7 @@ export class BoardRenderer extends Renderer {
     this.div.appendChild(this.app.view);
     this.app.stage.interactive = true;
 
-    this.renderObjects = [
-      new RenderObject(this.game.star_zxq),
-      new RenderObject(this.game.star_a1c),
-    ];
+    this.renderObjects = this.game.stars.map(star => new RenderObject(star));
     for (let i = 0; i < this.game.players.length; i++) {
       this.renderObjects.push(new RenderObject(this.game.players[i].base));
       this.game.players[i].spirits.forEach(

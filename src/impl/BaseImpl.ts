@@ -1,4 +1,4 @@
-import {Player} from "../Player";
+import {Player} from "../game/Player";
 import {SpiritImpl} from "./SpiritImpl";
 import {getBlankSight} from "../utils/misc";
 import {Base, Position} from "../globals/gameTypes";
@@ -85,8 +85,8 @@ export class BaseImpl implements Base {
       return;
     }
 
-    while (this.spiritCount < this.maxSpirits &&
-           this.energy >= this.spiritCost[this.spiritCostIdx][2]) {
+    if (this.spiritCount < this.maxSpirits &&
+        this.energy >= this.spiritCost[this.spiritCostIdx][2]) {
       this.energy -= this.spiritCost[this.spiritCostIdx][2];
       this.createSpirit([
         this.position[0] + 5,

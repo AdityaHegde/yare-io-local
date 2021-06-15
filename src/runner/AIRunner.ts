@@ -1,6 +1,5 @@
 export abstract class AIRunner {
   protected readonly scriptPath: string;
-  protected scriptContent: string;
 
   constructor(scriptPath: string) {
     this.scriptPath = scriptPath;

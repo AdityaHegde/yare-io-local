@@ -1,16 +1,16 @@
 import {AIRunner} from "./AIRunner";
 import {readFile} from "fs/promises";
-import {createContext, runInContext} from "vm";
+import {Script} from "vm";
 
 export class VmRunner extends AIRunner {
+  protected script: Script;
+
   public async init(): Promise<void> {
-    this.scriptContent = (await readFile(this.scriptPath)).toString();
+    this.script = new Script((await readFile(this.scriptPath)).toString());
   }
 
   public async run(playerGlobal: Record<string, any>): Promise<void> {
-    const context = {...playerGlobal};
-    createContext(context);
-    runInContext(this.scriptContent, context, {
+    this.script.runInNewContext({...playerGlobal}, {
       displayErrors: true,
     });
   }

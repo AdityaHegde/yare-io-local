@@ -1,8 +1,9 @@
 import { EventEmitter } from "events";
-import {Game} from "../Game";
-import {Player} from "../Player";
+import {Game} from "../game/Game";
+import {Player} from "../game/Player";
 import {Log, Logger} from "../utils/Logger";
 import {AIRunner} from "./AIRunner";
+import assert from "assert";
 
 @Log
 export class GameRunner extends EventEmitter {
@@ -55,16 +56,8 @@ export class GameRunner extends EventEmitter {
   }
 
   private async tickForPlayer(index: number): Promise<void> {
-    const playerGlobal = this.game.getGlobalsForPlayer(index);
-
-    for (const k in playerGlobal) {
-      if (Object.prototype.hasOwnProperty.call(playerGlobal, k)) {
-        global[k] = playerGlobal[k];
-      }
-    }
-
     try {
-      await this.aiRunner[index].run(playerGlobal);
+      await this.aiRunner[index].run(this.game.getGlobalsForPlayer(index));
     } catch (err) {
       this.emit(GameRunner.ERROR_THROWN, index, err.stack);
     }

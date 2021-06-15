@@ -1,5 +1,5 @@
 import React from "react";
-import {Player} from "../Player";
+import {Player} from "../game/Player";
 
 function NumberDisplay({num}: {num: number}) {
   return (

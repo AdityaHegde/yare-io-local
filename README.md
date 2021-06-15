@@ -7,6 +7,7 @@ Features,
 1. Supports Circle and Squares.
 2. All APIs mentioned in the doc https://yare.io/documentation.
 3. Comparing 2 AIs programmatically.
+4. Compare eco of N different AIs. Battle can be unpredictable as all AIs will be put on the same board.
 
 ## Installation guide
 
@@ -45,6 +46,8 @@ const yare = new Yare(
   // BlankRenderer that leaves all methods blank.
   // Extend Renderer and implement your own.
   new BlankRenderer(game),
+  // Generates the base map as of now
+  new MapGenerator(MapData.getBasicMapData()),
   {runIntervalInMs: 5},
 );
 yare.init().then(() => yare.resume());
@@ -98,6 +101,8 @@ const yare = new Yare(
   ]),
   // renders a simple board
   new BoardRenderer(game, div),
+  // Generates the base map as of now
+  new MapGenerator(MapData.getBasicMapData()),
   { runIntervalInMs: 50 },
 );
 
@@ -112,3 +117,39 @@ ReactDOM.render(
 ```
 
 I used `python3 -m http.server 8000` for hosting the assets.
+
+### Testing multiple AIs in parallel
+Check bin/test-yare.ts,
+```typescript
+import {BlankRenderer, Game, GameRunner, MapData, MapGenerator, SpiritType, Yare} from "@adityahegde/yare-io-local";
+import {VmRunner} from "@adityahegde/yare-io-local/dist/runner/VmRunner";
+
+const playerFiles = [];
+for (let i = 2; i < process.argv.length; i++) {
+  playerFiles.push(process.argv[i]);
+}
+
+// Assumes all players are Circle. Can be anything.
+// Just make sure spiritTypes is equal to AIRunners passed to GameRunner
+const game = new Game(playerFiles.map(_ => SpiritType.Circle));
+const yare = new Yare(
+  game,
+  // creates a VmRunner for every file passed to the script.
+  // make sure this is equal to spiritTypes passed to Game constructor
+  new GameRunner(game, playerFiles.map(playerFile => new VmRunner(playerFile))),
+  new BlankRenderer(game),
+  new MapGenerator(MapData.getBasicMapData()),
+  { runIntervalInMs: 5 },
+);
+(async () => {
+  // runs until one of the player is dead of has reached max spirits
+  // end condition per player can be modified by passing a function as 1st arg
+  // also runs to a max of 2000 ticks. can be modified by passing 2nd arg
+  await yare.runUntil();
+
+  // prints spirit count and whether player is dead
+  game.players.forEach((player, idx) => {
+    console.log(`${playerFiles[idx]}: Spirits=${player.spirits.length} ${player.base.hp <= 0 ? "Dead" : ""}`);
+  });
+})();
+```

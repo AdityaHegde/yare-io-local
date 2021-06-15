@@ -1,7 +1,7 @@
 import {Renderer} from "./Renderer";
 import {Log} from "../utils/Logger";
 import {SpiritImpl} from "../impl/SpiritImpl";
-import {Player} from "../Player";
+import {Player} from "../game/Player";
 
 @Log
 export class LoggerRenderer extends Renderer {

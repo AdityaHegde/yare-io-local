@@ -1,4 +1,4 @@
-import {Player} from "../Player";
+import {Player} from "../game/Player";
 import {SpiritMoveEvent} from "../events/SpiritMoveEvent";
 import {SpiritEnergizeEvent} from "../events/SpiritEnergizeEvent";
 import {getBlankSight} from "../utils/misc";
@@ -6,7 +6,7 @@ import {Log, Logger} from "../utils/Logger";
 import {Intractable, Position, Spirit} from "../globals/gameTypes";
 import {SpiritData} from "./Data";
 import {SpiritJumpEvent} from "../events/SpiritJumpEvent";
-import {SpiritType} from "../SpiritType";
+import {SpiritType} from "../game/SpiritType";
 import {isWithinRange} from "../utils/GridUtils";
 import {MERGE_DISTANCE_SQUARED} from "../constants";
 import {SpiritMergeEvent} from "../events/SpiritMergeEvent";
@@ -45,7 +45,7 @@ export class SpiritImpl implements Spirit {
   }
 
   public move(position: Position): void {
-    this.owner.game.gameEventLoop.addEvent(new SpiritMoveEvent(this, position));
+    this.owner.game.gameEventLoop.addEvent(new SpiritMoveEvent(this, [...position]));
   }
 
   public energize(target: Intractable): void {
@@ -66,8 +66,8 @@ export class SpiritImpl implements Spirit {
 
   public jump(position: Position): void {
     if (this.owner.spiritType === SpiritType.Square &&
-      this.energy >= Math.ceil(this.energy_capacity / 2)) {
-      this.owner.game.gameEventLoop.addEvent(new SpiritJumpEvent(this, position));
+        this.energy >= Math.ceil(this.energy_capacity / 2)) {
+      this.owner.game.gameEventLoop.addEvent(new SpiritJumpEvent(this, [...position]));
     }
   }
 

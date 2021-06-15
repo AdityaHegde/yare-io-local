@@ -1,4 +1,4 @@
-import {Game} from "../Game";
+import {Game} from "../game/Game";
 import {Logger} from "../utils/Logger";
 import {SpiritImpl} from "../impl/SpiritImpl";
 

@@ -1,9 +1,9 @@
-import {BaseImpl} from "./impl/BaseImpl";
+import {BaseImpl} from "../impl/BaseImpl";
 import {Game} from "./Game";
-import {SpiritImpl} from "./impl/SpiritImpl";
-import EventEmitter from "events";
+import {SpiritImpl} from "../impl/SpiritImpl";
 import {SpiritType} from "./SpiritType";
-import {BaseData} from "./impl/Data";
+import {BaseData} from "../impl/Data";
+import EventEmitter from "events";
 
 export class Player extends EventEmitter {
   public name: string;
@@ -22,17 +22,6 @@ export class Player extends EventEmitter {
     this.name = name;
     this.game = game;
     this.spiritType = spiritType;
-  }
-
-  public bootstrapData(index: number) {
-    this.base = new BaseImpl(`base_${this.name}`,
-      [1600 + 1000 * index, 700 + 1000 * index], this);
-
-    for (let i = 0; i < BaseData[this.spiritType].startingSpiritCount; i++) {
-      this.base.createSpirit(
-        [1500 + i * 50 + 1200 * index, 500 + 1000 * index],
-      );
-    }
   }
 
   public addNewSpirit(spirit: SpiritImpl) {

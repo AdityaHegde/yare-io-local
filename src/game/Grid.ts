@@ -1,6 +1,6 @@
 import {Game} from "./Game";
-import {isWithinRange} from "./utils/GridUtils";
-import {ORIGINAL_SIGHT_DISTANCE_SQUARED} from "./constants";
+import {isWithinRange} from "../utils/GridUtils";
+import {ORIGINAL_SIGHT_DISTANCE_SQUARED} from "../constants";
 
 export class Grid {
   public readonly game: Game;

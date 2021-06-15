@@ -16,16 +16,12 @@ export class SpiritEnergizeEvent extends GameEvent {
 
   public run() {
     if (this.target === this.source) {
-      let star: Energy;
-      if (isWithinRange(this.source, this.source.owner.game.star_a1c, ORIGINAL_ACTION_DISTANCE_SQUARED)) {
-        star = this.source.owner.game.star_a1c;
-      } else if (isWithinRange(this.source, this.source.owner.game.star_zxq, ORIGINAL_ACTION_DISTANCE_SQUARED)) {
-        star = this.source.owner.game.star_zxq;
+      for (const star of this.source.owner.game.stars) {
+        if (isWithinRange(this.source, star, ORIGINAL_ACTION_DISTANCE_SQUARED)) {
+          this.source.energy = Math.min(this.source.energy + this.source.size, this.source.energy_capacity);
+          return;
+        }
       }
-      if (!star) {
-        return;
-      }
-      this.source.energy = Math.min(this.source.energy + this.source.size, this.source.energy_capacity);
       return;
     }
 
