@@ -6,7 +6,9 @@ export class VmRunner extends AIRunner {
   protected script: Script;
 
   public async init(): Promise<void> {
-    this.script = new Script((await readFile(this.scriptPath)).toString());
+    this.script = new Script((await readFile(this.scriptPath)).toString(), {
+      displayErrors: true,
+    });
   }
 
   public async run(playerGlobal: Record<string, any>): Promise<void> {

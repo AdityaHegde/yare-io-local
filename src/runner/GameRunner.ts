@@ -59,6 +59,7 @@ export class GameRunner extends EventEmitter {
     try {
       await this.aiRunner[index].run(this.game.getGlobalsForPlayer(index));
     } catch (err) {
+      this.logger.error(err);
       this.emit(GameRunner.ERROR_THROWN, index, err.stack);
     }
   }

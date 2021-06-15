@@ -50,8 +50,8 @@ export class Game {
     globalAlias.my_spirits = player.spirits;
     globalAlias.base = player.base;
     globalAlias.enemy_base = enemyPlayer.base;
-    globalAlias.star_zxq = this.stars[index];
-    globalAlias.star_a1c = this.stars[enemyIndex];
+    globalAlias[this.stars[index].id] = this.stars[index];
+    globalAlias[this.stars[enemyIndex].id] = this.stars[enemyIndex];
     globalAlias.memory = player.memory;
 
     return globalAlias;
