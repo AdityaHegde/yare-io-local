@@ -1,6 +1,9 @@
 import {Game} from "./Game";
-import {isWithinRange} from "../utils/GridUtils";
-import {ORIGINAL_SIGHT_DISTANCE_SQUARED} from "../constants";
+import {getDistance, isWithinRange} from "../utils/GridUtils";
+import {ACTION_DISTANCE, ORIGINAL_ACTION_DISTANCE_SQUARED, ORIGINAL_SIGHT_DISTANCE_SQUARED} from "../constants";
+import {EnergyEntity, Entity, Intractable} from "../globals/gameTypes";
+import {SpiritImpl} from "../impl/SpiritImpl";
+import {Player} from "./Player";
 
 export class Grid {
   public readonly game: Game;
@@ -20,19 +23,41 @@ export class Grid {
     spiritImpls.forEach((spiritImpl, i) => {
       for (let j = i + 1; j < spiritImpls.length; j++) {
         const spiritCheckImpl = spiritImpls[j];
-        if (isWithinRange(spiritImpl, spiritCheckImpl, ORIGINAL_SIGHT_DISTANCE_SQUARED)) {
-          spiritImpl.addSpiritToSight(spiritCheckImpl);
-        }
+        this.updateSpiritSight(spiritImpl, spiritCheckImpl);
       }
 
-      this.game.players.forEach((player) => {
-        if (isWithinRange(spiritImpl, player.base, ORIGINAL_SIGHT_DISTANCE_SQUARED)) {
-          player.base.addSpiritToSight(spiritImpl);
-        }
-      });
-    });
+      this.game.players.forEach(player => this.updateSpiritSight(player.base, spiritImpl));
 
-    // spiritImpls.filter(spiritImpl => spiritImpl.sight.enemies.length > 0)
-    //   .forEach(spiritImpl => console.log(spiritImpl.id, JSON.stringify(spiritImpl.sight)));
+      this.game.outposts.forEach(outpost => this.updateSpiritSight(outpost, spiritImpl));
+    });
+  }
+
+  private updateSpiritSight(sourceEntity: EnergyEntity, spirit: SpiritImpl) {
+    const distance = getDistance(sourceEntity, spirit);
+    const sourceRange = (sourceEntity as any).range;
+
+    if (distance <= sourceRange * sourceRange) {
+      this.addToSight(sourceEntity, spirit, true);
+      if (sourceEntity instanceof SpiritImpl) {
+        this.addToSight(spirit, sourceEntity, true);
+      }
+    }
+    if (distance <= (sourceRange + ACTION_DISTANCE) * (sourceRange + ACTION_DISTANCE)) {
+      this.addToSight(sourceEntity, spirit);
+      if (sourceEntity instanceof SpiritImpl) {
+        this.addToSight(spirit, sourceEntity);
+      }
+    }
+  }
+
+  private addToSight(sourceEntity: EnergyEntity, spirit: SpiritImpl, inRange = false) {
+    const suffix = inRange ? "_beamable" : "";
+    const sourceOwner: Player = (sourceEntity as any).owner;
+
+    if (sourceOwner === spirit.owner) {
+      sourceEntity.sight["friends" + suffix].push(spirit.id);
+    } else {
+      sourceEntity.sight["enemies" + suffix].push(spirit.id);
+    }
   }
 }

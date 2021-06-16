@@ -4,10 +4,12 @@ import {SpiritImpl} from "../impl/SpiritImpl";
 import {GameEventLoop} from "../events/GameEventLoop";
 import {Grid} from "./Grid";
 import {SpiritType} from "./SpiritType";
+import {OutpostImpl} from "../impl/OutpostImpl";
 
 export class Game {
   public players = new Array<Player>();
   public stars = new Array<EnergyImpl>();
+  public outposts = new Array<OutpostImpl>();
 
   public spirits: {
     [k in string]: SpiritImpl
@@ -41,7 +43,10 @@ export class Game {
   }
 
   public getGlobalsForPlayer(index: number): Record<string, any> {
+    const pairIndex = Math.floor(index / 2);
+    const starPairIndex = 3 * pairIndex;
     const enemyIndex = (index + (index % 2 === 0 ? 1 : -1)) % this.players.length;
+
     const player = this.players[index];
     const enemyPlayer = this.players[enemyIndex];
     const globalAlias: Record<string, any> = {};
@@ -50,8 +55,14 @@ export class Game {
     globalAlias.my_spirits = player.spirits;
     globalAlias.base = player.base;
     globalAlias.enemy_base = enemyPlayer.base;
-    globalAlias[this.stars[index].id] = this.stars[index];
-    globalAlias[this.stars[enemyIndex].id] = this.stars[enemyIndex];
+
+    [
+      this.stars[(index % 2) + starPairIndex],
+      this.stars[starPairIndex + 2],
+      this.stars[((index + 1) % 2) + starPairIndex],
+    ].forEach(star => globalAlias[star.id] = star);
+
+    globalAlias.outpost = this.outposts[pairIndex];
     globalAlias.memory = player.memory;
 
     return globalAlias;

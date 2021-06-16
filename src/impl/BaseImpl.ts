@@ -3,6 +3,7 @@ import {SpiritImpl} from "./SpiritImpl";
 import {getBlankSight} from "../utils/misc";
 import {Base, Position} from "../globals/gameTypes";
 import {BaseData} from "./Data";
+import {ACTION_DISTANCE} from "../constants";
 
 export class BaseImpl implements Base {
   public id: string;
@@ -13,6 +14,8 @@ export class BaseImpl implements Base {
   public position: Position;
   public sight = getBlankSight();
   public structure_type = "base";
+
+  public range = ACTION_DISTANCE;
 
   public underAttack = false;
   public splitSpirits = new Array<[position: Position, spiritIds: Array<string>, energy: number]>();
@@ -80,13 +83,22 @@ export class BaseImpl implements Base {
     ]);
   }
 
-  public createSpiritIfEnoughEnergy() {
+  public hasReachedMaxSpirits() {
+    return this.spiritCount === this.maxSpirits;
+  }
+
+  public postTick() {
+    this.createSpiritIfEnoughEnergy();
+    this.addBackSplitSpirits();
+  }
+
+  private createSpiritIfEnoughEnergy() {
     if (this.underAttack) {
       return;
     }
 
     if (this.spiritCount < this.maxSpirits &&
-        this.energy >= this.spiritCost[this.spiritCostIdx][2]) {
+      this.energy >= this.spiritCost[this.spiritCostIdx][2]) {
       this.energy -= this.spiritCost[this.spiritCostIdx][2];
       this.createSpirit([
         this.position[0] + 5,
@@ -95,7 +107,7 @@ export class BaseImpl implements Base {
     }
   }
 
-  public addBackSplitSpirits() {
+  private addBackSplitSpirits() {
     this.splitSpirits.forEach(([position, spiritIds, energy]) => {
       spiritIds.forEach((spiritId) => {
         this.owner.addNewSpirit(new SpiritImpl(
@@ -103,9 +115,5 @@ export class BaseImpl implements Base {
         ));
       });
     });
-  }
-
-  public hasReachedMaxSpirits() {
-    return this.spiritCount === this.maxSpirits;
   }
 }

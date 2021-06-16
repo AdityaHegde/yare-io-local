@@ -29,6 +29,7 @@ export class BoardRenderer extends Renderer {
     this.app.stage.interactive = true;
 
     this.renderObjects = this.game.stars.map(star => new RenderObject(star));
+    this.game.outposts.forEach(outpost => this.renderObjects.push(new RenderObject(outpost)));
     for (let i = 0; i < this.game.players.length; i++) {
       this.renderObjects.push(new RenderObject(this.game.players[i].base));
       this.game.players[i].spirits.forEach(

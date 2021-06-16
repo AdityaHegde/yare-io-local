@@ -1,7 +1,8 @@
 import * as PIXI from "pixi.js";
 import {BaseImpl} from "../../impl/BaseImpl";
-import {SpiritImpl} from "../../impl/SpiritImpl";
 import {Intractable} from "../../globals/gameTypes";
+import {OutpostImpl} from "../../impl/OutpostImpl";
+import {EnergyImpl} from "../../impl/EnergyImpl";
 
 export class RenderObject {
   public readonly entity: Intractable;
@@ -10,8 +11,16 @@ export class RenderObject {
 
   constructor(entity: Intractable) {
     this.entity = entity;
-    this.scale = (entity instanceof BaseImpl) ? 5 :
-      ((entity instanceof SpiritImpl) ? 1 : 3);
+
+    if (entity instanceof BaseImpl) {
+      this.scale = 5;
+    } else if (entity instanceof OutpostImpl) {
+      this.scale = 3;
+    } else if (entity instanceof EnergyImpl) {
+      this.scale = 2;
+    } else {
+      this.scale = 1;
+    }
   }
 
   public init(): PIXI.Graphics {

@@ -5,6 +5,8 @@ import {BaseData} from "../impl/Data";
 import {EnergyImpl} from "../impl/EnergyImpl";
 import {Position} from "../globals/gameTypes";
 import {MapData} from "./MapData";
+import {BASE_STAR_INIT_ENERGY, MIDDLE_STAR_START_TICK} from "../constants";
+import {OutpostImpl} from "../impl/OutpostImpl";
 
 export class MapGenerator {
   protected readonly mapData: MapData;
@@ -49,6 +51,22 @@ export class MapGenerator {
     game.stars.push(new EnergyImpl(
       playerIdxNormalized === 0 ? "star_zxq": "star_a1c",
       getPosition(this.mapData.StartingStarPos, this.mapData.StarPosMultiplier),
+      BASE_STAR_INIT_ENERGY, 0,
+    ));
+
+    if (playerIdxNormalized === 1) {
+      this.generatePlayerPair(game, gridX, gridY);
+    }
+  }
+
+  protected generatePlayerPair(game: Game, gridX: number, gridY: number) {
+    game.stars.push(new EnergyImpl(
+      "star_p89", [this.mapData.MiddleStarPos[0] + gridX, this.mapData.MiddleStarPos[1] + gridY],
+      0, MIDDLE_STAR_START_TICK,
+    ));
+
+    game.outposts.push(new OutpostImpl(
+      "outpost_mdo", [this.mapData.MiddleOutpostPos[0] + gridX, this.mapData.MiddleOutpostPos[1] + gridY],
     ));
   }
 }

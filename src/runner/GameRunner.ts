@@ -3,11 +3,11 @@ import {Game} from "../game/Game";
 import {Player} from "../game/Player";
 import {Log, Logger} from "../utils/Logger";
 import {AIRunner} from "./AIRunner";
-import assert from "assert";
 
 @Log
 export class GameRunner extends EventEmitter {
   private logger: Logger;
+  protected tickNum = 0;
 
   public game: Game;
   public aiRunner: Array<AIRunner>;
@@ -35,6 +35,7 @@ export class GameRunner extends EventEmitter {
   }
 
   public async run(): Promise<void> {
+    this.tickNum++;
     await this.tick();
     await this.postTick();
   }
@@ -52,6 +53,8 @@ export class GameRunner extends EventEmitter {
       this.postTickForPlayer(i);
     }
     this.game.gameEventLoop.postTick();
+    this.game.outposts.forEach(outpost => outpost.postTick());
+    this.game.stars.forEach(star => star.postTick(this.tickNum))
     this.game.grid.postTick();
   }
 
@@ -82,7 +85,6 @@ export class GameRunner extends EventEmitter {
       this.emit(GameRunner.BASE_DESTROYED, player);
     }
 
-    player.base.createSpiritIfEnoughEnergy();
-    player.base.addBackSplitSpirits();
+    player.base.postTick();
   }
 }

@@ -1,12 +1,14 @@
 export interface Sight {
-  friends: string[];
-  enemies: string[];
-  structures: string[];
+  friends: Array<string>;
+  friends_beamable: Array<string>;
+  enemies: Array<string>;
+  enemies_beamable: Array<string>;
+  structures: Array<string>;
 }
 
 export type Position = [number, number];
 
-export interface Common {
+export interface Entity {
   id: string;
   position: Position;
   size: number;
@@ -16,19 +18,29 @@ export interface Common {
   sight: Sight;
 }
 
-export interface Structure extends Pick<Common, "id" | "position"> {
+export interface Structure {
+  id: string;
+  position: Position;
   structure_type: string;
 }
 
-export interface Base extends Common, Structure {}
+export interface Base extends Entity, Structure {}
 
-export interface Energy extends Structure {}
+export interface Outpost extends Entity, Structure {
+  range: number;
+  control: string;
+}
 
-export type EnergyEntity = Spirit | Base;
+export interface Energy extends Structure {
+  energy: number;
+}
+
+export type EnergyEntity = Spirit | Base | Outpost;
 export type Intractable = EnergyEntity | Energy;
 
-export interface Spirit extends Common {
+export interface Spirit extends Entity {
   mark: string;
+  last_energized: string;
   move: (position: Position) => void;
   energize: (target: Intractable) => void;
   merge: (target: Spirit) => void;

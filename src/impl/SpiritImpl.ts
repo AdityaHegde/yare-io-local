@@ -8,7 +8,7 @@ import {SpiritData} from "./Data";
 import {SpiritJumpEvent} from "../events/SpiritJumpEvent";
 import {SpiritType} from "../game/SpiritType";
 import {isWithinRange} from "../utils/GridUtils";
-import {MERGE_DISTANCE_SQUARED} from "../constants";
+import {ACTION_DISTANCE, MERGE_DISTANCE_SQUARED} from "../constants";
 import {SpiritMergeEvent} from "../events/SpiritMergeEvent";
 import {SpiritDivideEvent} from "../events/SpiritDivideEvent";
 
@@ -24,6 +24,9 @@ export class SpiritImpl implements Spirit {
   public position: Position;
   public sight = getBlankSight();
   public mark: string;
+  public last_energized: string;
+
+  public range = ACTION_DISTANCE;
 
   public mergedCount = 0;
   public mergedSpiritIds = new Set<string>();
