@@ -63,18 +63,6 @@ export class BaseImpl implements Base {
     }
   }
 
-  public resetSight() {
-    this.sight = getBlankSight();
-  }
-
-  public addSpiritToSight(spiritImpl: SpiritImpl) {
-    if (this.owner === spiritImpl.owner) {
-      this.sight.friends.push(spiritImpl.id);
-    } else {
-      this.sight.enemies.push(spiritImpl.id);
-    }
-  }
-
   public spiritHasSplit(spiritImpl: SpiritImpl) {
     this.splitSpirits.push([
       spiritImpl.position,

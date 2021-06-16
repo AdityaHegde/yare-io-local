@@ -80,23 +80,6 @@ export class SpiritImpl implements Spirit {
   public set_mark(label: string): void {
   }
 
-  public resetSight() {
-    this.sight = getBlankSight();
-  }
-
-  public addSpiritToSight(spiritImpl: SpiritImpl) {
-    this.updateSightWithSpirit(spiritImpl);
-    spiritImpl.updateSightWithSpirit(this);
-  }
-
-  public updateSightWithSpirit(spiritImpl: SpiritImpl) {
-    if (this.owner === spiritImpl.owner) {
-      this.sight.friends.push(spiritImpl.id);
-    } else {
-      this.sight.enemies.push(spiritImpl.id);
-    }
-  }
-
   public mergeStats(spiritImpl: SpiritImpl) {
     this.size += spiritImpl.size;
     this.energy_capacity += spiritImpl.energy_capacity;

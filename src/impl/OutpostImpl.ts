@@ -42,14 +42,6 @@ export class OutpostImpl implements Outpost {
     this.control = "";
   }
 
-  public addSpiritToSight(spiritImpl: SpiritImpl) {
-    if (this.owner === spiritImpl.owner) {
-      this.sight.friends.push(spiritImpl.id);
-    } else {
-      this.sight.enemies.push(spiritImpl.id);
-    }
-  }
-
   public postTick() {
     this.attackInRange();
     this.updateRangeAndUsage();
@@ -65,9 +57,9 @@ export class OutpostImpl implements Outpost {
     const spirit = this.owner.game.spirits[this.sight.enemies_beamable[idx]];
 
     if (spirit.energy > 0) {
-      spirit.energy = Math.max(spirit.energy - this.usage, 0);
+      spirit.energy = Math.max(spirit.energy - 2 * this.usage, 0);
     } else {
-      spirit.hp = Math.max(0, spirit.energy - this.usage);
+      spirit.hp = Math.max(0, spirit.energy - 2 * this.usage);
     }
     this.energy -= this.usage;
   }

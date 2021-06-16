@@ -54,7 +54,7 @@ export class GameRunner extends EventEmitter {
     }
     this.game.gameEventLoop.postTick();
     this.game.outposts.forEach(outpost => outpost.postTick());
-    this.game.stars.forEach(star => star.postTick(this.tickNum))
+    this.game.stars.forEach(star => star.postTick(this.tickNum));
     this.game.grid.postTick();
   }
 
